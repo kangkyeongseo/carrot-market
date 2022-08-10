@@ -107,6 +107,26 @@ const Home: NextPage = () => {
           />
         </form>
       </div>
+      <div className="bg-white p-6 rounded-3xl shadow-xl">
+        <details className="select-none open:text-white open:bg-indigo-500">
+          <summary className="cursor-pointer">
+            What is my favorite food.
+          </summary>
+          <span>All</span>
+        </details>
+        <ul className="list-disc marker:text-teal-500">
+          <li>hi</li>
+          <li>hi</li>
+          <li>hi</li>
+        </ul>
+        <input
+          type="file"
+          className="file:hover:text-purple-500 file:hover:border-purple-500 file:hover:border file:hover:bg-white file:cursor-pointer file:transition-colors file:border-0 file:rounded-xl file:bg-purple-500 file:text-white file:px-5 "
+        />
+        <p className="first-letter:text-2xl first-letter:hover:text-cyan-500">
+          123456789
+        </p>
+      </div>
     </div>
   );
 };
