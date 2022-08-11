@@ -1,25 +1,17 @@
 import type { NextPage } from "next";
 const Home: NextPage = () => {
   return (
-    <div className="bg-slate-400 py-20 px-20 grid gap-10 min-h-screen">
-      <div className="bg-white p-6 rounded-3xl shadow-xl">
+    <div className="bg-slate-400 xl:place-content-center py-20 px-20 grid lg:grid-cols-2 xl:grid-cols-3 gap-10 min-h-screen ">
+      <div className="bg-white p-6 rounded-3xl shadow-xl flex flex-col justify-between">
         <span className="font-semibold text-3xl">Select Item</span>
         <ul>
-          {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="flex justify-between my-2 odd:bg-blue-50 even:bg-blue-300"
-            >
+          {[1, 2].map((i) => (
+            <div key={i} className="flex justify-between my-2">
               <span className="text-gray-500">Grey Chair</span>
               <span className="font-semibold">$19</span>
             </div>
           ))}
         </ul>
-        {["a", "b", "c", ""].map((c, i) => (
-          <li className="bg-red-500 py-2 empty:hidden" key={i}>
-            {c}
-          </li>
-        ))}
         <div className="mt-2 pt-2 border-t-2 border-dashed flex justify-between">
           <span>Total</span>
           <span className="font-semibold">$19</span>
@@ -28,8 +20,8 @@ const Home: NextPage = () => {
           Checkout
         </button>
       </div>
-      <div className="bg-white rounded-3xl shadow-xl overflow-hidden group">
-        <div className="bg-blue-500 p-6 pb-14">
+      <div className="bg-white rounded-3xl shadow-xl overflow-hidden group ">
+        <div className="portrait:bg-blue-500 landscape:bg-teal-500 p-6 pb-14 xl:pb-32 ">
           <span className="text-white text-2xl">Profile</span>
         </div>
         <div className="rounded-3xl p-6 bg-white relative -top-5">
@@ -50,7 +42,7 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
-      <div className="bg-white p-6 rounded-3xl shadow-xl">
+      <div className="bg-white p-6 rounded-3xl shadow-xl lg:col-span-2 xl:col-span-1">
         <div className="flex justify-between items-center mb-5">
           <span>←</span>
           <div className="space-x-3">
@@ -85,47 +77,6 @@ const Home: NextPage = () => {
             </button>
           </div>
         </div>
-      </div>
-      <div className="bg-blue-500 p-6 rounded-3xl shadow-xl focus-within:bg-black">
-        <form className=" flex flex-col space-y-2">
-          <input
-            type="text"
-            required
-            placeholder="Username"
-            className="border-none p-1 rounded-md peer"
-          />
-          <span className="hidden peer-invalid:block peer-invalid:text-white ">
-            This input is invalid
-          </span>
-          <span className="hidden peer-valid:block peer-valid:text-white ">
-            Awesome Username
-          </span>
-          <input
-            type="submit"
-            value="Login"
-            className="bg-inherit text-white"
-          />
-        </form>
-      </div>
-      <div className="bg-white p-6 rounded-3xl shadow-xl">
-        <details className="select-none open:text-white open:bg-indigo-500">
-          <summary className="cursor-pointer">
-            What is my favorite food.
-          </summary>
-          <span>All</span>
-        </details>
-        <ul className="list-disc marker:text-teal-500">
-          <li>hi</li>
-          <li>hi</li>
-          <li>hi</li>
-        </ul>
-        <input
-          type="file"
-          className="file:hover:text-purple-500 file:hover:border-purple-500 file:hover:border file:hover:bg-white file:cursor-pointer file:transition-colors file:border-0 file:rounded-xl file:bg-purple-500 file:text-white file:px-5 "
-        />
-        <p className="first-letter:text-2xl first-letter:hover:text-cyan-500">
-          123456789
-        </p>
       </div>
     </div>
   );
