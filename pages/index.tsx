@@ -1,14 +1,18 @@
 import type { NextPage } from "next";
 const Home: NextPage = () => {
   return (
-    <div className="bg-slate-400 xl:place-content-center py-20 px-20 grid lg:grid-cols-2 xl:grid-cols-3 gap-10 min-h-screen ">
-      <div className="bg-white p-6 rounded-3xl shadow-xl flex flex-col justify-between">
-        <span className="font-semibold text-3xl">Select Item</span>
+    <div className=" bg-slate-400 xl:place-content-center py-20 px-20 grid lg:grid-cols-2 xl:grid-cols-3 gap-10 min-h-screen ">
+      <div className="bg-white dark:bg-black p-6 rounded-3xl shadow-xl flex flex-col justify-between">
+        <span className="font-semibold dark:text-white text-3xl">
+          Select Item
+        </span>
         <ul>
           {[1, 2].map((i) => (
             <div key={i} className="flex justify-between my-2">
-              <span className="text-gray-500">Grey Chair</span>
-              <span className="font-semibold">$19</span>
+              <span className="text-gray-500 dark:text-gray-100">
+                Grey Chair
+              </span>
+              <span className="font-semibold dark:text-white">$19</span>
             </div>
           ))}
         </ul>
@@ -16,13 +20,13 @@ const Home: NextPage = () => {
           <span>Total</span>
           <span className="font-semibold">$19</span>
         </div>
-        <button className="block mt-5 bg-blue-500 text-white p-3 text-center rounded-xl w-3/4 mx-auto hover:bg-teal-500 hover:text-black active:bg-yellow-500 focus:bg-red-500">
+        <button className="block mt-5 bg-blue-500 dark:bg-black dark:border dark:hover:bg-white dark:border-white text-white p-3 text-center rounded-xl w-3/4 mx-auto hover:bg-teal-500 hover:text-black active:bg-yellow-500 focus:bg-red-500">
           Checkout
         </button>
       </div>
       <div className="bg-white rounded-3xl shadow-xl overflow-hidden group ">
-        <div className="portrait:bg-blue-500 landscape:bg-teal-500 p-6 pb-14 xl:pb-32 ">
-          <span className="text-white text-2xl">Profile</span>
+        <div className="portrait:bg-blue-500 landscape:bg-teal-500 p-6 pb-14 xl:pb-32">
+          <span className="text-white text-[200px] text-[#000]">Profile</span>
         </div>
         <div className="rounded-3xl p-6 bg-white relative -top-5">
           <div className="relative -top-16 flex justify-between items-end">
