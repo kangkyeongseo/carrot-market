@@ -1,4 +1,4 @@
-import { useState } from "react";
+import type { useState } from "react";
 
 function cls(...classnames: string[]) {
   return classnames.join(" ");
