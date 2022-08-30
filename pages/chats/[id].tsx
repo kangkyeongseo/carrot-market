@@ -1,29 +1,15 @@
 import type { NextPage } from "next";
-import Layout from "../components/layout";
+import Layout from "../../components/layout";
+import Message from "../../components/message";
 
 const ChatDetail: NextPage = () => {
   return (
-    <Layout canGoBack={true}>
+    <Layout canGoBack={true} title="KKS">
       <div className="px-4 py-10 pb-16 space-y-4">
-        <div className="flex items-start space-x-2">
-          <div className="w-8 h-8 rounded-full bg-slate-400" />
-          <div className="w-1/2 text-sm text-gray-700 p-2 border border-gray-300 rounded-md">
-            <p>Hi how much are you selling them for?</p>
-          </div>
-        </div>
-        <div className="flex flex-row-reverse items-start space-x-reverse space-x-2">
-          <div className="w-8 h-8 rounded-full bg-slate-400" />
-          <div className="w-1/2 text-sm text-gray-700 p-2 border border-gray-300 rounded-md">
-            <p> I want $20,000</p>
-          </div>
-        </div>
-        <div className="flex items-start space-x-2">
-          <div className="w-8 h-8 rounded-full bg-slate-400" />
-          <div className="w-1/2 text-sm text-gray-700 p-2 border border-gray-300 rounded-md">
-            <p>...?</p>
-          </div>
-        </div>
-        <div className="fixed w-full mx-auto max-w-md bottom-4 inset-x-0">
+        <Message message="Hi how much are you selling them for?" />
+        <Message message="I want ￦20,000" reversed />
+        <Message message="...?" />
+        <form className="fixed w-full mx-auto max-w-md bottom-4 inset-x-0">
           <div className="flex items-center relative">
             <input
               type="text"
@@ -35,7 +21,7 @@ const ChatDetail: NextPage = () => {
               </button>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </Layout>
   );
