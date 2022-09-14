@@ -1,55 +1,64 @@
-import React, { useState } from "react";
+import { FieldError, FieldErrors, useForm } from "react-hook-form";
+
+interface ILoginForm {
+  username: string;
+  email: string;
+  password: string;
+  error?: string;
+}
 
 export default function Forms() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const onUsernameChange = (evnet: React.SyntheticEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = evnet;
-    setUsername(value);
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    reset,
+  } = useForm<ILoginForm>({ mode: "onChange" });
+  const onValid = (data: ILoginForm) => {
+    setError("error", { message: "Backend is offline" });
+    reset();
   };
-  const onEmailChange = (evnet: React.SyntheticEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = evnet;
-    setEmail(value);
+  const onInValid = (error: FieldErrors) => {
+    console.log(error);
   };
-  const onPasswordChange = (evnet: React.SyntheticEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = evnet;
-    setPassword(value);
-  };
-  const onSubmit = (evnet: React.SyntheticEvent<HTMLFormElement>) => {
-    event?.preventDefault();
-  };
+  console.log(watch("email"));
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit(onValid, onInValid)}>
       <input
-        value={username}
-        onChange={onUsernameChange}
+        {...register("username", {
+          required: "User name is required",
+          minLength: {
+            message: "The username should be longer than 5 char",
+            value: 5,
+          },
+        })}
         type="text"
         placeholder="Username"
-        required
-        minLength={5}
       />
+      {errors.username?.message}
       <input
-        value={email}
-        onChange={onEmailChange}
+        {...register("email", {
+          required: "Email name is required",
+          validate: {
+            notGmail: (value) =>
+              !value.includes("@gmail.com") || "Gmail is not allowed",
+          },
+        })}
         type="email"
         placeholder="Email"
-        required
+        className={`${Boolean(errors.email?.message) ? "border-red-500" : ""}`}
       />
+      {errors.email?.message}
       <input
-        value={password}
-        onChange={onPasswordChange}
+        {...register("password", { required: "Password name is required" })}
         type="password"
         placeholder="Password"
-        required
       />
       <input type="submit" value="Create Account" />
+      {errors.password?.message}
+      {errors.error?.message}
     </form>
   );
 }
