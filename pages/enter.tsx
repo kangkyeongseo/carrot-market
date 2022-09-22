@@ -13,7 +13,6 @@ interface IEnterForm {
 
 const Enter: NextPage = () => {
   const [enter, { loading, data, error }] = useMutation("api/users/enter");
-  const [submitting, setSubmitting] = useState(false);
   const { register, watch, handleSubmit, reset } = useForm<IEnterForm>();
   const [method, setMethod] = useState<"email" | "phone">("email");
   const onEmailClick = () => {
@@ -27,7 +26,6 @@ const Enter: NextPage = () => {
   const onValid = (validForm: IEnterForm) => {
     enter(validForm);
   };
-  console.log(loading, data, error);
   return (
     <div className="mt-16 px-4">
       <h3 className="text-3xl font-bold text-center">Enter to Carrot</h3>
@@ -82,9 +80,11 @@ const Enter: NextPage = () => {
               required
             />
           ) : null}
-          {method === "email" ? <Button text="Get login link" /> : null}
+          {method === "email" ? (
+            <Button text={loading ? "Loding" : "Get login link"} />
+          ) : null}
           {method === "phone" ? (
-            <Button text={submitting ? "Loding" : "Get one-time password"} />
+            <Button text={loading ? "Loding" : "Get one-time password"} />
           ) : null}
         </form>
         <div className="mt-8">
