@@ -45,14 +45,14 @@ async function handler(
     },
   });
   if (phone) {
-    const message = await twilioClient.messages.create({
+    /*  const message = await twilioClient.messages.create({
       messagingServiceSid: process.env.TWILIO_MSID,
       to: process.env.PHONE!,
       body: `Your login token is ${payload}`,
-    });
+    }); */
   }
   if (email) {
-    const mailOptions = {
+    /*   const mailOptions = {
       from: process.env.USEREMAIL,
       to: email,
       subject: "Carrot Market Authentication Email",
@@ -71,7 +71,7 @@ async function handler(
       }
     );
     mailTransporter.close();
-    console.log(message);
+    console.log(message); */
   }
   return res.json({
     ok: true,
