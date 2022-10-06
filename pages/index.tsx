@@ -24,7 +24,7 @@ const Home: NextPage = () => {
             hearts={1}
           />
         ))}
-        <FloadtingButton href="/items/upload">
+        <FloadtingButton href="/products/upload">
           <svg
             className="h-6 w-6"
             xmlns="http://www.w3.org/2000/svg"
