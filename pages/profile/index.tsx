@@ -1,8 +1,10 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import Layout from "@components/layout";
+import useSWR from "swr";
 
 const Profile: NextPage = () => {
+  const {} = useSWR("/api/users/me");
   return (
     <Layout title="나의캐럿" hasTabBar={true}>
       <div className="py-10 px-4">

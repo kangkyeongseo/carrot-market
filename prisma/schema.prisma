@@ -97,6 +97,7 @@ model Review {
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
   review String @db.MediumText
+  score Int @default(1)
   createdBy User @relation(name: "writtenReviews", fields: [createdById], references: [id], onDelete: Cascade)
   createdById Int
   createdFor User @relation(name: "receievedReviews",fields: [createdForId], references: [id], onDelete: Cascade)
