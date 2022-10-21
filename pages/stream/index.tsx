@@ -2,16 +2,25 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import FloadtingButton from "@components/floating-button";
 import Layout from "@components/layout";
+import useSWR from "swr";
+import { useEffect } from "react";
+import { Stream } from "@prisma/client";
+
+interface IStreamsResponse {
+  ok: boolean;
+  streams: Stream[];
+}
 
 const Stream: NextPage = () => {
+  const { data, error } = useSWR<IStreamsResponse>(`/api/streams`);
   return (
     <Layout title="라이브" hasTabBar={true}>
       <div className="py-10 space-y-4 divide-y-2">
-        {[1, 1, 1, 1, 1].map((_, i) => (
-          <Link key={i} href={`/stream/${i}`}>
+        {data?.streams.map((stream) => (
+          <Link key={stream.id} href={`/stream/${stream.id}`}>
             <a className="pt-4 px-4 ">
               <div className="w-full bg-slate-300 aspect-video rounded-md shadow-sm" />
-              <h3 className=" text-gray-700 text-lg mt-2">Let's try carrots</h3>
+              <h3 className=" text-gray-700 text-lg mt-2">{stream.name}</h3>
             </a>
           </Link>
         ))}

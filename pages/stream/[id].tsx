@@ -1,28 +1,30 @@
 import type { NextPage } from "next";
 import Layout from "@components/layout";
 import Message from "@components/message";
+import useSWR from "swr";
+import { useRouter } from "next/router";
+import { Stream } from "@prisma/client";
+
+interface IStreamRespinse {
+  ok: boolean;
+  stream: Stream;
+}
 
 const StreamDetail: NextPage = () => {
+  const { query } = useRouter();
+  const { data, error } = useSWR<IStreamRespinse>(
+    query.id ? `/api/streams/${query.id}` : null
+  );
   return (
     <Layout canGoBack={true}>
       <div className="px-4 py-10 space-y-4">
         <div className="w-full bg-slate-300 aspect-video rounded-md shadow-sm" />
         <h3 className=" text-gray-800 font-semibold text-2xl mt-2">
-          Stream Title
+          {data?.stream?.name}
         </h3>
         <div className="space-y-2">
-          <h5 className="font-medium text-xl">$150</h5>
-          <p className="text-sm">
-            {" "}
-            My money&apos;s in that office, right? If she start giving me some
-            bullshit about it ain&apos;t there, and we got to go someplace else
-            and get it, I&apos;m gonna shoot you in the head then and there.
-            Then I&apos;m gonna shoot that bitch in the kneecaps, find out where
-            my goddamn money is. She gonna tell me too. Hey, look at me when
-            I&apos;m talking to you, motherfucker. You listen: we go in there,
-            and that ni**a Winston or anybody else is in there, you the first
-            motherfucker to get shot. You understand?
-          </p>
+          <h5 className="font-medium text-xl">${data?.stream?.price}</h5>
+          <p className="text-sm">{data?.stream?.description}</p>
         </div>
         <div className="space-y-2">
           <h5 className="font-medium text-xl">Live Chat</h5>
