@@ -22,7 +22,7 @@ const Stream: NextPage = () => {
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            stroke-width="2"
+            strokeWidth="2"
           >
             <path
               strokeLinecap="round"
