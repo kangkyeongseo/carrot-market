@@ -3,12 +3,66 @@ import Button from "@components/button";
 import Input from "@components/input";
 import Layout from "@components/layout";
 import useUser from "@libs/client/useUser";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import useMutation from "@libs/client/useMutaion";
+import { useRouter } from "next/router";
+
+interface IEditProfileForm {
+  name?: string;
+  email?: string;
+  phone?: string;
+  formErrors?: string;
+}
+
+interface IEditProfileResponse {
+  ok: boolean;
+  error?: string;
+}
 
 const EditProfile: NextPage = () => {
   const { user } = useUser();
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    formState: { errors },
+  } = useForm<IEditProfileForm>();
+  useEffect(() => {
+    if (user?.name) {
+      setValue("name", user.name);
+    }
+    if (user?.email) {
+      setValue("email", user.email);
+    }
+    if (user?.phone) {
+      setValue("phone", user.phone);
+    }
+  }, [user, setValue]);
+  const [editProfile, { data, loading }] =
+    useMutation<IEditProfileResponse>(`/api/users/me`);
+  const onValid = ({ name, email, phone }: IEditProfileForm) => {
+    if (loading) return;
+    if (email === "" && phone === "" && name === "") {
+      setError("formErrors", {
+        message: "Email or Phone number are required. You need to choose one",
+      });
+    }
+    editProfile({ email, phone, name });
+  };
+  useEffect(() => {
+    if (data && !data.ok) {
+      setError("formErrors", { message: data.error });
+    }
+    if (data && data.ok) {
+      router.push(`/profile`);
+    }
+  }, [data, setError, router]);
   return (
     <Layout canGoBack={true} title="Edit Profile">
-      <form className="px-4 py-10 space-y-4">
+      <form onSubmit={handleSubmit(onValid)} className="px-4 py-10 space-y-4">
         <div className="flex items-center space-x-3">
           <div className="w-14 h-14 bg-slate-300 rounded-full" />
           <label
@@ -24,15 +78,35 @@ const EditProfile: NextPage = () => {
             />
           </label>
         </div>
-        <Input required label="Email address" name="email" type="email" />
         <Input
-          required
+          register={register("name")}
+          required={false}
+          label="Name"
+          name="name"
+          type="text"
+        />
+        <Input
+          register={register("email")}
+          required={false}
+          label="Email address"
+          name="email"
+          type="email"
+        />
+        <Input
+          register={register("phone")}
+          required={false}
           label="Phone number"
           name="phone"
           type="number"
           kind="phone"
         />
-        <Button text="Update Profile" />
+        {errors.formErrors ? (
+          <span className="my-2 text-red-500 font-medium text-center block">
+            {errors.formErrors.message}
+          </span>
+        ) : null}
+
+        <Button text={loading ? "Loading" : "Update Profile"} />
       </form>
     </Layout>
   );
