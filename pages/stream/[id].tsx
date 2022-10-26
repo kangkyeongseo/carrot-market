@@ -6,10 +6,25 @@ import { useRouter } from "next/router";
 import { Stream } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutaion";
+import useUser from "@libs/client/useUser";
+import { useEffect } from "react";
+
+interface IStreamMessages {
+  id: number;
+  message: string;
+  user: {
+    avatar: string | null;
+    id: number;
+  };
+}
+
+interface IStreamWithMessages extends Stream {
+  messages: IStreamMessages[];
+}
 
 interface IStreamRespinse {
   ok: boolean;
-  stream: Stream;
+  stream: IStreamWithMessages;
 }
 
 interface IMessageForm {
@@ -17,9 +32,10 @@ interface IMessageForm {
 }
 
 const StreamDetail: NextPage = () => {
+  const { user } = useUser();
   const { query } = useRouter();
   const { register, handleSubmit, reset } = useForm<IMessageForm>();
-  const { data, error } = useSWR<IStreamRespinse>(
+  const { data, mutate } = useSWR<IStreamRespinse>(
     query.id ? `/api/streams/${query.id}` : null
   );
   const [sendMessage, { loading, data: sendMessageData }] = useMutation(
@@ -30,6 +46,11 @@ const StreamDetail: NextPage = () => {
     reset();
     sendMessage(form);
   };
+  useEffect(() => {
+    if (sendMessageData && sendMessageData.ok) {
+      mutate();
+    }
+  }, [sendMessageData]);
   return (
     <Layout canGoBack={true}>
       <div className="px-4 py-10 space-y-4">
@@ -44,9 +65,13 @@ const StreamDetail: NextPage = () => {
         <div className="space-y-2">
           <h5 className="font-medium text-xl">Live Chat</h5>
           <div className="h-[50vh] overflow-y-scroll px-4 py-10 pb-16 space-y-4">
-            <Message message="Hi how much are you selling them for?" />
-            <Message message="I want ￦20,000" reversed />
-            <Message message="...?" />
+            {data?.stream?.messages?.map((message) => (
+              <Message
+                key={message.id}
+                message={message.message}
+                reversed={message.user.id === user.id}
+              />
+            ))}
           </div>
         </div>
         <div className="fixed w-full mx-auto max-w-md bottom-4 inset-x-0">
