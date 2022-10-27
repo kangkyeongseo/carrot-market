@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutaion";
 import useUser from "@libs/client/useUser";
 import { useEffect } from "react";
+import streams from "pages/api/streams";
 
 interface IStreamMessages {
   id: number;
@@ -36,7 +37,8 @@ const StreamDetail: NextPage = () => {
   const { query } = useRouter();
   const { register, handleSubmit, reset } = useForm<IMessageForm>();
   const { data, mutate } = useSWR<IStreamRespinse>(
-    query.id ? `/api/streams/${query.id}` : null
+    query.id ? `/api/streams/${query.id}` : null,
+    { refreshInterval: 1000 }
   );
   const [sendMessage, { loading, data: sendMessageData }] = useMutation(
     `/api/streams/${query.id}/messages`
@@ -44,13 +46,23 @@ const StreamDetail: NextPage = () => {
   const onValid = (form: IMessageForm) => {
     if (loading) return;
     reset();
+    mutate(
+      (prev) =>
+        prev && {
+          ...prev,
+          stream: {
+            ...prev.stream,
+            messages: [
+              ...prev.stream.messages,
+              { id: Date.now(), message: form.message, user: { ...user } },
+            ],
+          },
+        },
+      false
+    );
     sendMessage(form);
   };
-  useEffect(() => {
-    if (sendMessageData && sendMessageData.ok) {
-      mutate();
-    }
-  }, [sendMessageData]);
+
   return (
     <Layout canGoBack={true}>
       <div className="px-4 py-10 space-y-4">
