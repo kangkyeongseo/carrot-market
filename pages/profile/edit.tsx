@@ -4,7 +4,7 @@ import Input from "@components/input";
 import Layout from "@components/layout";
 import useUser from "@libs/client/useUser";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useMutation from "@libs/client/useMutaion";
 import { useRouter } from "next/router";
 
@@ -12,6 +12,7 @@ interface IEditProfileForm {
   name?: string;
   email?: string;
   phone?: string;
+  avatar?: FileList;
   formErrors?: string;
 }
 
@@ -29,6 +30,7 @@ const EditProfile: NextPage = () => {
     setValue,
     setError,
     formState: { errors },
+    watch,
   } = useForm<IEditProfileForm>();
   useEffect(() => {
     if (user?.name) {
@@ -43,7 +45,7 @@ const EditProfile: NextPage = () => {
   }, [user, setValue]);
   const [editProfile, { data, loading }] =
     useMutation<IEditProfileResponse>(`/api/users/me`);
-  const onValid = ({ name, email, phone }: IEditProfileForm) => {
+  const onValid = ({ name, email, phone, avatar }: IEditProfileForm) => {
     if (loading) return;
     if (email === "" && phone === "" && name === "") {
       setError("formErrors", {
@@ -60,17 +62,33 @@ const EditProfile: NextPage = () => {
       router.push(`/profile`);
     }
   }, [data, setError, router]);
+  const [avatarPreview, setAvatarPreview] = useState("");
+  const avatar = watch("avatar");
+  useEffect(() => {
+    if (avatar && avatar.length > 0) {
+      const file = avatar[0];
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  }, [avatar]);
   return (
     <Layout canGoBack={true} title="Edit Profile">
       <form onSubmit={handleSubmit(onValid)} className="px-4 py-10 space-y-4">
         <div className="flex items-center space-x-3">
-          <div className="w-14 h-14 bg-slate-300 rounded-full" />
+          {avatarPreview ? (
+            <img
+              src={avatarPreview}
+              className="w-14 h-14 bg-slate-300 rounded-full"
+            />
+          ) : (
+            <div className="w-14 h-14 bg-slate-300 rounded-full" />
+          )}
           <label
             htmlFor="avatar"
             className="cursor-pointer py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700"
           >
             Change Avatar
             <input
+              {...register("avatar")}
               type="file"
               id="avatar"
               className="hidden"
