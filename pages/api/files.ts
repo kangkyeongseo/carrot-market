@@ -20,7 +20,6 @@ async function handler(
       }
     )
   ).json();
-  console.log(response);
   res.json({
     ok: true,
     ...response.result,
