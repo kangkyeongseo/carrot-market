@@ -44,7 +44,7 @@ const EditProfile: NextPage = () => {
     }
     if (user?.avatar) {
       setAvatarPreview(
-        `https://imagedelivery.net/9M2uXEiy4utPzuop8vchJA/${user?.avatar}/public`
+        `https://imagedelivery.net/9M2uXEiy4utPzuop8vchJA/${user?.avatar}/avatar`
       );
     }
   }, [user, setValue]);
