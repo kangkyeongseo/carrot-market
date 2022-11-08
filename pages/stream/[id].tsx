@@ -66,13 +66,31 @@ const StreamDetail: NextPage = () => {
   return (
     <Layout canGoBack={true}>
       <div className="px-4 py-10 space-y-4">
-        <div className="w-full bg-slate-300 aspect-video rounded-md shadow-sm" />
+        {data?.stream.cloudflareId ? (
+          <iframe
+            src={`https://iframe.videodelivery.net/${data?.stream.cloudflareId}`}
+            className="w-full aspect-video rounded-md shadow-sm"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+            allowFullScreen={true}
+          ></iframe>
+        ) : null}
         <h3 className=" text-gray-800 font-semibold text-2xl mt-2">
           {data?.stream?.name}
         </h3>
         <div className="space-y-2">
           <h5 className="font-medium text-xl">${data?.stream?.price}</h5>
           <p className="text-sm">{data?.stream?.description}</p>
+          <div className="bg-orange-300 p-5 rounded-md overflow-scroll flex flex-col skew-y-3">
+            <span>Stream Keys (secret)</span>
+            <span className="text-gray-600">
+              <span className="font-medium to-gray-800">URL</span>:
+              {data?.stream.cloudflareUrl}
+            </span>
+            <span className="text-gray-600">
+              <span className="font-medium to-gray-800">Key</span>:
+              {data?.stream.cloudflareKey}
+            </span>
+          </div>
         </div>
         <div className="space-y-2">
           <h5 className="font-medium text-xl">Live Chat</h5>

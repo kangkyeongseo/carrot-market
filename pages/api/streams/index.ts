@@ -19,8 +19,28 @@ async function handler(
       session: { user },
       body: { name, price, description },
     } = req;
+    const {
+      result: {
+        uid,
+        rtmps: { url, streamKey },
+      },
+    } = await (
+      await fetch(
+        `https://api.cloudflare.com/client/v4/accounts/${process.env.CF_ID}/stream/live_inputs`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${process.env.CF_TOKEN}`,
+          },
+          body: `{"meta":{"name":"${name}"},"recording":{"mode":"automatic","timeoutSeconds":10}}`,
+        }
+      )
+    ).json();
     const stream = await client.stream.create({
       data: {
+        cloudflareId: uid,
+        cloudflareUrl: url,
+        cloudflareKey:streamKey
         name,
         price,
         description,
