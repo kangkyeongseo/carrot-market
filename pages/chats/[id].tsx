@@ -1,14 +1,33 @@
 import type { NextPage } from "next";
 import Layout from "@components/layout";
 import Message from "@components/message";
+import useSWR from "swr";
+import { useRouter } from "next/router";
+import { Chat, Room } from "@prisma/client";
+import useUser from "@libs/client/useUser";
+
+interface RoomWithChat extends Room {
+  chats: Chat[];
+}
+
+interface IRoomResponse {
+  ok: boolean;
+  room: RoomWithChat;
+}
 
 const ChatDetail: NextPage = () => {
+  const router = useRouter();
+  const { user } = useUser();
+  const { data } = useSWR<IRoomResponse>(`/api/rooms/${router.query.id}`);
   return (
     <Layout canGoBack={true} title="KKS">
       <div className="px-4 py-10 pb-16 space-y-4">
-        <Message message="Hi how much are you selling them for?" />
-        <Message message="I want ￦20,000" reversed />
-        <Message message="...?" />
+        {data?.room?.chats.map((chat) => (
+          <Message
+            message={chat.chat}
+            reversed={chat.userId === user.id ? true : false}
+          />
+        ))}
         <form className="fixed w-full mx-auto max-w-md bottom-4 inset-x-0">
           <div className="flex items-center relative">
             <input

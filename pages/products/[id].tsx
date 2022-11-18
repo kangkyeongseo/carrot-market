@@ -9,6 +9,7 @@ import useMutation from "@libs/client/useMutaion";
 import { cls } from "@libs/client/utils";
 import useUser from "@libs/client/useUser";
 import Image from "next/image";
+import { useEffect } from "react";
 
 interface ProductWithUser extends Product {
   user: User;
@@ -27,11 +28,26 @@ const ItemDetail: NextPage = () => {
     router.query.id ? `/api/products/${router.query.id}` : null
   );
   const [toggleFav] = useMutation(`/api/products/${router.query.id}/fav`);
+  const [roomCreate, { loading, data: roomData }] = useMutation(
+    `/api/rooms/${router.query.id}`
+  );
   const onFavClick = () => {
     if (!data) return;
     boundMutate({ ...data, isLiked: !data.isLiked }, false);
     toggleFav({});
   };
+  const handleCLick = () => {
+    if (loading) return;
+    roomCreate(null);
+  };
+  useEffect(() => {
+    if (roomData && roomData.ok && roomData.room) {
+      router.push(`/chats/${roomData.room.id}`);
+    }
+    if (roomData && roomData.ok && roomData.existRoom) {
+      router.push(`/chats/${roomData.existRoom.id}`);
+    }
+  }, [roomData, router]);
   return (
     <Layout canGoBack={true}>
       <div className="p-4">
@@ -72,7 +88,7 @@ const ItemDetail: NextPage = () => {
               {data?.product?.description}
             </p>
             <div className="flex items-center justify-between space-x-2">
-              <Button large text="Talk to seller" />
+              <Button onClick={handleCLick} large text="Talk to seller" />
               <button
                 onClick={onFavClick}
                 className={cls(
