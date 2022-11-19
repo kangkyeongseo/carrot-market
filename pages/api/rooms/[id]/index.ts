@@ -11,11 +11,15 @@ async function handler(
     query: { id },
     session: { user },
   } = req;
+  const product = await client.product.findFirst({
+    where: {
+      id: +id!,
+    },
+  });
   if (req.method === "GET") {
     const room = await client.room.findFirst({
       where: {
-        userId: user?.id,
-        productId: +id!.toString(),
+        id: +id!,
       },
       include: {
         chats: true,
@@ -29,16 +33,22 @@ async function handler(
   if (req.method === "POST") {
     const existRoom = await client.room.findFirst({
       where: {
-        userId: user?.id,
+        productUserId: user?.id,
+        ownerUserId: product?.userId,
         productId: +id!.toString(),
       },
     });
     if (!existRoom) {
       const room = await client.room.create({
         data: {
-          user: {
+          productUser: {
             connect: {
               id: user?.id,
+            },
+          },
+          ownerUser: {
+            connect: {
+              id: product?.userId,
             },
           },
           product: {
