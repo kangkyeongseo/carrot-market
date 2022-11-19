@@ -23,6 +23,16 @@ async function handler(
       },
       include: {
         chats: true,
+        ownerUser: {
+          select: {
+            name: true,
+          },
+        },
+        productUser: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
     res.json({

@@ -3,34 +3,66 @@ import Layout from "@components/layout";
 import Message from "@components/message";
 import useSWR from "swr";
 import { useRouter } from "next/router";
-import { Chat, Room } from "@prisma/client";
+import { Chat, Room, User } from "@prisma/client";
 import useUser from "@libs/client/useUser";
+import { useForm } from "react-hook-form";
+import useMutation from "@libs/client/useMutaion";
+import { useEffect } from "react";
 
-interface RoomWithChat extends Room {
+interface RoomWithChatAndUser extends Room {
   chats: Chat[];
+  ownerUser: User;
+  productUser: User;
 }
 
 interface IRoomResponse {
   ok: boolean;
-  room: RoomWithChat;
+  room: RoomWithChatAndUser;
+}
+
+interface IChatForm {
+  chat: string;
 }
 
 const ChatDetail: NextPage = () => {
   const router = useRouter();
   const { user } = useUser();
-  const { data } = useSWR<IRoomResponse>(`/api/rooms/${router.query.id}`);
+  const { data, mutate } = useSWR<IRoomResponse>(
+    router.query.id ? `/api/rooms/${router.query.id}` : null
+  );
+  const [createChat, { data: chatData, loading }] = useMutation(
+    `/api/rooms/${router.query.id}/chat`
+  );
+  const { register, handleSubmit, reset } = useForm<IChatForm>();
+  const onValid = (form: IChatForm) => {
+    if (loading) return;
+    reset();
+    createChat(form);
+  };
   return (
-    <Layout canGoBack={true} title="KKS">
+    <Layout
+      canGoBack={true}
+      title={
+        data?.room.ownerUserId === user?.id
+          ? data?.room.productUser.name
+          : data?.room.ownerUser.name
+      }
+    >
       <div className="px-4 py-10 pb-16 space-y-4">
         {data?.room?.chats.map((chat) => (
           <Message
+            key={chat.id}
             message={chat.chat}
-            reversed={chat.userId === user.id ? true : false}
+            reversed={chat.userId === user?.id ? true : false}
           />
         ))}
-        <form className="fixed w-full mx-auto max-w-md bottom-4 inset-x-0">
+        <form
+          onSubmit={handleSubmit(onValid)}
+          className="fixed w-full mx-auto max-w-md bottom-4 inset-x-0"
+        >
           <div className="flex items-center relative">
             <input
+              {...register("chat", { required: true })}
               type="text"
               className="pr-12 shadow-sm rounded-full w-full border-gray-300 focus:ring-orange-500 focus:outline-none focus:border-orange-500"
             />
