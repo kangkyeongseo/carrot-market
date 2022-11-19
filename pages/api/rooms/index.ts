@@ -18,16 +18,25 @@ async function handler(
         include: {
           ownerUser: true,
           productUser: true,
+          chats: {
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 1,
+          },
         },
       },
       productRooms: {
         include: {
           ownerUser: true,
           productUser: true,
+          chats: {
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 1,
+          },
         },
-      },
-      chats: {
-        take: 1,
       },
     },
   });

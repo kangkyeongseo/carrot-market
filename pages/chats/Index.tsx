@@ -3,17 +3,18 @@ import Link from "next/link";
 import Layout from "@components/layout";
 import useUser from "@libs/client/useUser";
 import useSWR from "swr";
-import { Room, User } from "@prisma/client";
+import { Chat, Room, User } from "@prisma/client";
 import rooms from "pages/api/rooms";
 
-interface roomWithUser extends Room {
+interface roomWithUserAndChat extends Room {
   ownerUser: User;
   productuser: User;
+  chats: Chat[];
 }
 
 interface IRoomResponse {
   ok: boolean;
-  rooms: roomWithUser[];
+  rooms: roomWithUserAndChat[];
 }
 
 const Chats: NextPage = () => {
@@ -35,7 +36,7 @@ const Chats: NextPage = () => {
                         : room.ownerUser.name}
                     </p>
                     <p className="text-sm font-medium text-gray-500">
-                      See you tomorrow in the corner at 2pm!
+                      {room.chats[0].chat}
                     </p>
                   </div>
                 </a>
