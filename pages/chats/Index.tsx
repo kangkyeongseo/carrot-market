@@ -4,11 +4,10 @@ import Layout from "@components/layout";
 import useUser from "@libs/client/useUser";
 import useSWR from "swr";
 import { Chat, Room, User } from "@prisma/client";
-import rooms from "pages/api/rooms";
 
 interface roomWithUserAndChat extends Room {
   ownerUser: User;
-  productuser: User;
+  productUser: User;
   chats: Chat[];
 }
 
@@ -32,11 +31,11 @@ const Chats: NextPage = () => {
                   <div>
                     <p className="text-gray-700">
                       {user?.id === room.ownerUser.id
-                        ? room.productuser.name
+                        ? room.productUser.name
                         : room.ownerUser.name}
                     </p>
                     <p className="text-sm font-medium text-gray-500">
-                      {room.chats[0].chat}
+                      {room.chats[0]?.chat}
                     </p>
                   </div>
                 </a>

@@ -24,6 +24,7 @@ interface IItemDetailResponse {
 
 const ItemDetail: NextPage = () => {
   const router = useRouter();
+  const { user } = useUser();
   const { data, mutate: boundMutate } = useSWR<IItemDetailResponse>(
     router.query.id ? `/api/products/${router.query.id}` : null
   );
@@ -36,9 +37,9 @@ const ItemDetail: NextPage = () => {
     boundMutate({ ...data, isLiked: !data.isLiked }, false);
     toggleFav({});
   };
-  const handleCLick = () => {
+  const handleRoomCLick = () => {
     if (loading) return;
-    roomCreate(null);
+    roomCreate({});
   };
   useEffect(() => {
     if (roomData && roomData.ok && roomData.room) {
@@ -88,7 +89,7 @@ const ItemDetail: NextPage = () => {
               {data?.product?.description}
             </p>
             <div className="flex items-center justify-between space-x-2">
-              <Button onClick={handleCLick} large text="Talk to seller" />
+              <Button onClick={handleRoomCLick} large text="Talk to seller" />
               <button
                 onClick={onFavClick}
                 className={cls(

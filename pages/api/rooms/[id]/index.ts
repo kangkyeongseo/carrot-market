@@ -33,6 +33,11 @@ async function handler(
             name: true,
           },
         },
+        reservation: {
+          select: {
+            createdAt: true,
+          },
+        },
       },
     });
     res.json({

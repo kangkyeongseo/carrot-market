@@ -3,21 +3,22 @@ import Layout from "@components/layout";
 import Message from "@components/message";
 import useSWR from "swr";
 import { useRouter } from "next/router";
-import { Chat, Room, User } from "@prisma/client";
+import { Chat, Reservation, Room, User } from "@prisma/client";
 import useUser from "@libs/client/useUser";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutaion";
 import { useEffect } from "react";
 
-interface RoomWithChatAndUser extends Room {
+interface RoomWithChatAndUserAndReservation extends Room {
   chats: Chat[];
   ownerUser: User;
   productUser: User;
+  reservation: Reservation[];
 }
 
 interface IRoomResponse {
   ok: boolean;
-  room: RoomWithChatAndUser;
+  room: RoomWithChatAndUserAndReservation;
 }
 
 interface IChatForm {
@@ -33,11 +34,28 @@ const ChatDetail: NextPage = () => {
   const [createChat, { data: chatData, loading }] = useMutation(
     `/api/rooms/${router.query.id}/chat`
   );
+  const [
+    createReservation,
+    { data: reservationData, loading: reservationLoading },
+  ] = useMutation(`/api/rooms/${router.query.id}/reservation`);
   const { register, handleSubmit, reset } = useForm<IChatForm>();
   const onValid = (form: IChatForm) => {
     if (loading) return;
     reset();
     createChat(form);
+  };
+  useEffect(() => {
+    if (chatData && chatData.ok) {
+      mutate();
+    }
+  }, [chatData, mutate]);
+  useEffect(() => {
+    if (reservationData && reservationData.ok) {
+      mutate();
+    }
+  }, [reservationData, mutate]);
+  const handleReservationClick = () => {
+    createReservation({});
   };
   return (
     <Layout
@@ -48,7 +66,19 @@ const ChatDetail: NextPage = () => {
           : data?.room.ownerUser.name
       }
     >
-      <div className="px-4 py-10 pb-16 space-y-4">
+      {data?.room.ownerUserId === user?.id ? (
+        <button
+          onClick={handleReservationClick}
+          className="fixed w-48 top-16 left-1/2 right-1/2 -ml-24 bg-orange-400 text-white rounded-lg hover:bg-orange-600"
+        >
+          {data && reservationLoading
+            ? "Loading..."
+            : data?.room.reservation.length === 0
+            ? "Make a reservation"
+            : "Cancel reservation"}
+        </button>
+      ) : null}
+      <div className="px-4 py-16 pb-16 space-y-4">
         {data?.room?.chats.map((chat) => (
           <Message
             key={chat.id}
