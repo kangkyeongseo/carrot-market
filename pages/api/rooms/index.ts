@@ -40,6 +40,7 @@ async function handler(
       },
     },
   });
+  console.log(rooms);
   user?.ownerRooms.forEach((room) => rooms.push(room));
   user?.productRooms.forEach((room) => rooms.push(room));
   res.json({

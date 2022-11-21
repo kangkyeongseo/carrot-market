@@ -40,9 +40,30 @@ async function handler(
         },
       },
     });
+
+    const reservation = await client.reservation.findFirst({
+      where: {
+        roomId: room?.id,
+      },
+    });
+
+    const isReservation = Boolean(reservation);
+
+    let isReview;
+
+    if (!reservation) {
+      isReview = false;
+    } else {
+      isReview = Boolean(
+        Date.now() - reservation?.createdAt.getTime() > 1000 * 3600 * 24 * 7
+      );
+    }
+
     res.json({
       ok: true,
       room,
+      isReservation,
+      isReview,
     });
   }
   if (req.method === "POST") {

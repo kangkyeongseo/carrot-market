@@ -19,6 +19,8 @@ interface RoomWithChatAndUserAndReservation extends Room {
 interface IRoomResponse {
   ok: boolean;
   room: RoomWithChatAndUserAndReservation;
+  isReservation: boolean;
+  isReview: boolean;
 }
 
 interface IChatForm {
@@ -57,6 +59,9 @@ const ChatDetail: NextPage = () => {
   const handleReservationClick = () => {
     createReservation({});
   };
+  const handleReviewClick = () => {
+    router.push(`/chats/${data?.room.ownerUserId}/review`);
+  };
   return (
     <Layout
       canGoBack={true}
@@ -73,9 +78,17 @@ const ChatDetail: NextPage = () => {
         >
           {data && reservationLoading
             ? "Loading..."
-            : data?.room.reservation.length === 0
+            : !data?.isReservation
             ? "Make a reservation"
             : "Cancel reservation"}
+        </button>
+      ) : null}
+      {data?.room.productUserId === user?.id ? (
+        <button
+          onClick={handleReviewClick}
+          className="fixed w-48 top-16 left-1/2 right-1/2 -ml-24 bg-orange-400 text-white rounded-lg hover:bg-orange-600"
+        >
+          Leave a review
         </button>
       ) : null}
       <div className="px-4 py-16 pb-16 space-y-4">
