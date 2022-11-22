@@ -108,6 +108,8 @@ model Review {
   createdById Int
   createdFor User @relation(name: "receievedReviews",fields: [createdForId], references: [id], onDelete: Cascade)
   createdForId Int
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  roomId Int
 }
 
 model Fav {
@@ -195,6 +197,7 @@ model Room {
   productId Int
   chats Chat[]
   reservation Reservation[]
+  review Review[]
 }
 
 model Chat {

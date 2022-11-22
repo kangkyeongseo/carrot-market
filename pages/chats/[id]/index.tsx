@@ -60,7 +60,7 @@ const ChatDetail: NextPage = () => {
     createReservation({});
   };
   const handleReviewClick = () => {
-    router.push(`/chats/${data?.room.ownerUserId}/review`);
+    router.push(`/chats/${data?.room.id}/review`);
   };
   return (
     <Layout
